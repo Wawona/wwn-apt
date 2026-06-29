@@ -3,7 +3,17 @@
 Module manifests live in [`catalog/modules/`](../catalog/modules/) as YAML files.
 The canonical schema is [`catalog/schema/module.schema.json`](../catalog/schema/module.schema.json).
 
-## Required fields
+## Optional downloadable modules
+
+Manifests in [`catalog/modules/`](../catalog/modules/) — installable via `apt`:
+
+| Module | Source repo |
+|--------|-------------|
+| foot | `wwn-foot` |
+| neovim | `wwn-neovim` |
+| fastfetch | `wwn-fastfetch` |
+
+Required bundled software must **not** appear here. See [`BUNDLED-SOFTWARE.md`](BUNDLED-SOFTWARE.md).
 
 | Field | Description |
 |-------|-------------|

@@ -76,6 +76,10 @@ search)
 install)
 	[ -n "${1:-}" ] || { echo "apt: install requires a module name" >&2; exit 1; }
 	id="$1"
+	if apt_is_bundled_required "$id"; then
+		apt_reject_bundled_mutation "$id" "installed"
+		exit 4
+	fi
 	line="$(apt_find_module_line "$id")"
 	if [ -z "$line" ]; then
 		echo "apt: module '$id' not found in catalog" >&2
@@ -91,6 +95,10 @@ install)
 remove)
 	[ -n "${1:-}" ] || { echo "apt: remove requires a module name" >&2; exit 1; }
 	id="$1"
+	if apt_is_bundled_required "$id"; then
+		apt_reject_bundled_mutation "$id" "removed"
+		exit 4
+	fi
 	line="$(apt_find_module_line "$id")"
 	if [ -z "$line" ]; then
 		echo "apt: module '$id' not found in catalog" >&2

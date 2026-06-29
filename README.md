@@ -8,9 +8,11 @@ The `apt` command provided by Wawona is not a general-purpose Debian package man
 
 For example:
 
-* `apt search` lists approved downloadable modules that have been reviewed and made available for Wawona.
-* `apt install <package>` uses StoreKit APIs to request and download the corresponding approved module.
-* `apt remove <package>` removes the downloaded module from the user's local installation.
+* `apt search` lists **optional** downloadable modules in the embedded catalog (foot, neovim, fastfetch).
+* `apt install <package>` uses StoreKit APIs to request and download the corresponding approved optional module.
+* `apt remove <package>` removes an optional module from the user's local installation.
+
+**Required bundled software** (zsh, uutils coreutils, waypipe, and the `apt` command itself) is always included in Wawona and **cannot** be installed or removed via `apt`. See [`docs/BUNDLED-SOFTWARE.md`](docs/BUNDLED-SOFTWARE.md).
 
 All package acquisition, installation, and restoration operations are performed exclusively through Apple-approved mechanisms such as StoreKit and App Store-hosted content. No executable code is downloaded from third-party servers, and all modules execute solely within Wawona's constrained single-process runtime environment.
 
@@ -39,7 +41,7 @@ nix build .#apt-rootfs-ios
 ## Layout
 
 ```
-catalog/          Module manifests (YAML) and JSON Schema
+catalog/          Optional module manifests + bundled.yaml + JSON Schema
 apt/              Shell CLI stub (search, install, remove, list, show)
 docs/             Architecture, compliance, integration spec
 scripts/          Catalog validators and generators

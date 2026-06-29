@@ -30,11 +30,12 @@ apt_load_catalog() {
 	}
 	APT_JSONL="${share}/modules.jsonl"
 	APT_CATALOG_JSON="${share}/catalog.json"
+	APT_BUNDLED_JSON="${share}/bundled.json"
 	if [ ! -f "$APT_JSONL" ]; then
 		echo "apt: modules.jsonl missing under ${share}" >&2
 		return 1
 	fi
-	export APT_JSONL APT_CATALOG_JSON
+	export APT_JSONL APT_CATALOG_JSON APT_BUNDLED_JSON
 }
 
 apt_about_text() {
@@ -46,8 +47,11 @@ reviewed and approved for distribution through the App Store. It is not a
 general-purpose package manager.
 
   apt search [pattern]   List approved modules in the embedded catalog
-  apt install <module>   Authorize via StoreKit and download via On-Demand Resources
-  apt remove <module>    Remove a locally installed module
+  apt install <module>   Install an optional module (StoreKit + ODR)
+  apt remove <module>    Remove an optional module you installed
+
+Required software (zsh, coreutils, waypipe, apt) is always bundled and cannot
+be installed or removed through this command.
   apt list [--installed] Show catalog entries or installed modules
   apt show <module>      Display module metadata
 
@@ -123,6 +127,26 @@ apt_try_module_manager() {
 apt_module_manager_unavailable() {
 	echo "apt: module manager is not available." >&2
 	echo "apt: use Wawona Settings to install approved modules, or update the app when module support is enabled." >&2
+}
+
+apt_is_bundled_required() {
+	id="$1"
+	# Fallback when bundled.json is not yet embedded.
+	case "$id" in
+	zsh|coreutils|waypipe|apt) return 0 ;;
+	esac
+	if [ ! -f "${APT_BUNDLED_JSON:-}" ]; then
+		return 1
+	fi
+	grep -q "\"id\":\"${id}\"" "$APT_BUNDLED_JSON" 2>/dev/null
+}
+
+apt_reject_bundled_mutation() {
+	id="$1"
+	action="$2"
+	echo "apt: '${id}' is required bundled software and is always included in Wawona." >&2
+	echo "apt: it cannot be ${action} via apt." >&2
+	return 4
 }
 
 apt_search_match() {

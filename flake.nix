@@ -28,13 +28,14 @@
         nativeBuildInputs = [ pkgs.python3 pkgs.python3Packages.pyyaml ];
       } '' 
         ${pkgs.python3}/bin/python3 ${./scripts/generate-catalog-json.py} \
-          ${./catalog/modules} -o $out
+          ${./catalog/modules} --bundled ${./catalog/bundled.yaml} -o $out
       '';
 
       aptRootfsFor = pkgs:
         pkgs.callPackage ./dependencies/wawona/apt-rootfs.nix {
           catalogJson = "${catalogBundle pkgs}/catalog.json";
           modulesJsonl = "${catalogBundle pkgs}/modules.jsonl";
+          bundledJson = "${catalogBundle pkgs}/bundled.json";
         };
     in
     {

@@ -4,6 +4,7 @@
   pkgs,
   catalogJson,
   modulesJsonl,
+  bundledJson,
 }:
 
 pkgs.runCommand "wawona-apt-rootfs" {
@@ -20,6 +21,7 @@ pkgs.runCommand "wawona-apt-rootfs" {
 
   cp ${catalogJson} $out/usr/share/wawona/apt/catalog.json
   cp ${modulesJsonl} $out/usr/share/wawona/apt/modules.jsonl
+  cp ${bundledJson} $out/usr/share/wawona/apt/bundled.json
 
   cp ${../../apt/share/man/man8/apt.8} $out/usr/share/man/man8/apt.8
 ''

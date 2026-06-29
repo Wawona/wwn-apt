@@ -1,0 +1,28 @@
+schema_version: 1
+# Required bundled software — always shipped in the app binary/rootfs.
+# Not listed in the optional module catalog; cannot be installed or removed via apt.
+
+components:
+  - id: zsh
+    name: Z shell
+    wwn_repo: wwn-zsh
+    role: required
+    notes: In-process shell; always bundled
+
+  - id: coreutils
+    name: uutils coreutils
+    wwn_repo: wwn-coreutils
+    role: required
+    notes: In-process utility dispatch; always bundled
+
+  - id: waypipe
+    name: waypipe
+    wwn_repo: wwn-waypipe
+    role: required
+    notes: Remote Wayland proxy; always bundled
+
+  - id: apt
+    name: apt
+    wwn_repo: wwn-apt
+    role: required
+    notes: App Store module CLI; always bundled

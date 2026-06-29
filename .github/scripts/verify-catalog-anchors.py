@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Ensure catalog module ids remain stable (anchor check for CI)."""
+"""Ensure optional module catalog ids remain stable (anchor check for CI)."""
 
 from __future__ import annotations
 
@@ -12,20 +12,42 @@ except ImportError:
     print("PyYAML required", file=sys.stderr)
     sys.exit(1)
 
-EXPECTED = frozenset({"foot", "neovim", "fastfetch", "waypipe"})
+OPTIONAL_MODULES = frozenset({"foot", "neovim", "fastfetch"})
+BUNDLED_COMPONENTS = frozenset({"zsh", "coreutils", "waypipe", "apt"})
 
 
 def main() -> int:
-    modules_dir = Path(__file__).resolve().parents[1] / "catalog" / "modules"
+    root = Path(__file__).resolve().parents[2]
+    modules_dir = root / "catalog" / "modules"
+    bundled_path = root / "catalog" / "bundled.yaml"
+
     found = {p.stem for p in modules_dir.glob("*.yaml")}
-    missing = EXPECTED - found
-    extra = found - EXPECTED
+    missing = OPTIONAL_MODULES - found
+    extra = found - OPTIONAL_MODULES
     if missing:
-        print(f"Missing seed modules: {sorted(missing)}", file=sys.stderr)
+        print(f"Missing optional modules: {sorted(missing)}", file=sys.stderr)
     if extra:
-        print(f"Unexpected modules (update anchor list): {sorted(extra)}", file=sys.stderr)
+        print(f"Unexpected optional modules: {sorted(extra)}", file=sys.stderr)
+
+    with bundled_path.open(encoding="utf-8") as fh:
+        bundled_doc = yaml.safe_load(fh)
+    bundled_ids = {c["id"] for c in bundled_doc["components"]}
+    if bundled_ids != BUNDLED_COMPONENTS:
+        print(
+            f"Bundled component ids changed (expected {sorted(BUNDLED_COMPONENTS)}): "
+            f"{sorted(bundled_ids)}",
+            file=sys.stderr,
+        )
+        return 1
+
     if missing or extra:
         return 1
+
+    overlap = found & bundled_ids
+    if overlap:
+        print(f"Optional modules overlap bundled ids: {sorted(overlap)}", file=sys.stderr)
+        return 1
+
     print("Catalog module anchors OK")
     return 0
 

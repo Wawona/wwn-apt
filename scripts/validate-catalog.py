@@ -23,6 +23,9 @@ except ImportError:
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "catalog" / "schema" / "module.schema.json"
 MODULES_DIR = ROOT / "catalog" / "modules"
+BUNDLED_PATH = ROOT / "catalog" / "bundled.yaml"
+
+OPTIONAL_MODULE_IDS = frozenset({"foot", "neovim", "fastfetch"})
 
 KNOWN_WWN_REPOS = frozenset(
     {
@@ -35,6 +38,7 @@ KNOWN_WWN_REPOS = frozenset(
         "wwn-iland",
         "wwn-coreutils",
         "wwn-toolchain",
+        "wwn-apt",
     }
 )
 
@@ -45,6 +49,12 @@ SYMBOL_RE = re.compile(r"^(wawona_[a-z0-9_]+_main|[a-z0-9_]+_main)$")
 def load_schema() -> dict:
     with SCHEMA_PATH.open(encoding="utf-8") as fh:
         return json.load(fh)
+
+
+def load_bundled_ids() -> set[str]:
+    with BUNDLED_PATH.open(encoding="utf-8") as fh:
+        doc = yaml.safe_load(fh)
+    return {c["id"] for c in doc["components"]}
 
 
 def validate_module(doc: dict, schema: dict, path: Path) -> list[str]:
@@ -81,14 +91,22 @@ def validate_module(doc: dict, schema: dict, path: Path) -> list[str]:
 
 def main() -> int:
     schema = load_schema()
+    bundled_ids = load_bundled_ids()
     seen_ids: set[str] = set()
     all_errors: list[str] = []
 
     yaml_files = sorted(MODULES_DIR.glob("*.yaml"))
+    found_ids = {p.stem for p in yaml_files}
+
     if not yaml_files:
         all_errors.append(f"No module YAML files in {MODULES_DIR}")
-    elif len(yaml_files) < 4:
-        all_errors.append(f"Expected at least 4 seed modules, found {len(yaml_files)}")
+    elif found_ids != OPTIONAL_MODULE_IDS:
+        missing = OPTIONAL_MODULE_IDS - found_ids
+        extra = found_ids - OPTIONAL_MODULE_IDS
+        if missing:
+            all_errors.append(f"Missing optional modules: {sorted(missing)}")
+        if extra:
+            all_errors.append(f"Unexpected optional modules: {sorted(extra)}")
 
     for path in yaml_files:
         with path.open(encoding="utf-8") as fh:
@@ -100,6 +118,10 @@ def main() -> int:
         if mod_id in seen_ids:
             all_errors.append(f"Duplicate module id '{mod_id}'")
         seen_ids.add(mod_id)
+        if mod_id in bundled_ids:
+            all_errors.append(
+                f"{path}: '{mod_id}' is required bundled software and cannot be an optional module"
+            )
         all_errors.extend(validate_module(doc, schema, path))
 
     if all_errors:
@@ -107,7 +129,7 @@ def main() -> int:
             print(err, file=sys.stderr)
         return 1
 
-    print(f"Validated {len(yaml_files)} module(s)")
+    print(f"Validated {len(yaml_files)} optional module(s)")
     return 0
 
 

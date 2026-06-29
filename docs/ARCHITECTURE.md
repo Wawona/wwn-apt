@@ -21,15 +21,17 @@ User shell: apt install foot
 | Path | Purpose |
 |------|---------|
 | `$WAWONA_ROOTFS/usr/share/wawona/apt/catalog.json` | Full manifest (Wawona integration) |
-| `$WAWONA_ROOTFS/usr/share/wawona/apt/modules.jsonl` | One module per line (shell CLI) |
+| `$WAWONA_ROOTFS/usr/share/wawona/apt/modules.jsonl` | Optional modules (shell CLI) |
+| `$WAWONA_ROOTFS/usr/share/wawona/apt/bundled.json` | Required bundled components |
 | `$WAWONA_ROOTFS/usr/bin/apt` | CLI stub |
 | `~/Library/Application Support/Wawona/modules/installed.json` | Local install state |
 | `~/Library/Application Support/Wawona/module-manager.sock` | IPC socket (future) |
 
 ## Build pipeline
 
-1. Authors edit `catalog/modules/*.yaml`
-2. `scripts/generate-catalog-json.py` → `catalog.json` + `modules.jsonl`
+1. Authors edit `catalog/modules/*.yaml` (optional modules only)
+2. Required bundled list: `catalog/bundled.yaml` (zsh, coreutils, waypipe, apt)
+3. `scripts/generate-catalog-json.py` → `catalog.json`, `modules.jsonl`, `bundled.json`
 3. `scripts/validate-catalog.py` → JSON Schema + policy checks
 4. `nix build .#apt-rootfs-ios` → prefix tree for Wawona rootfs merge
 

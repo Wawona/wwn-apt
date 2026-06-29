@@ -100,6 +100,19 @@ hook cannot reach rootfs binaries.
 
 ## Dispatch registration (W4)
 
+### Required bundled (always enabled)
+
+Linked into the app at build time; **not** gated on `installed.json`:
+
+| Component | Symbol | Commands |
+|-----------|--------|----------|
+| zsh | `wawona_zsh_main` | (shell) |
+| coreutils | `wawona_coreutils_main` | `ls`, `cat`, … |
+| waypipe | `waypipe_main` | `waypipe` |
+| apt | (shell script) | `apt` |
+
+### Optional modules (install-gated)
+
 Extend `wawona-dispatch.c` or load a runtime table from `installed.json`:
 
 | Module | Symbol | Commands |
@@ -107,9 +120,9 @@ Extend `wawona-dispatch.c` or load a runtime table from `installed.json`:
 | foot | `foot_main` | `foot` |
 | neovim | `wawona_nvim_main` | `nvim`, `vi`, `vim` |
 | fastfetch | `fastfetch_main` | `fastfetch` |
-| waypipe | `waypipe_main` | `waypipe` |
 
-Weak-link all module symbols at app link time; gate dispatch on install state.
+Weak-link optional module symbols at app link time; gate dispatch on install state.
+Bundled symbols are always active.
 
 ## Android parallel (spec only)
 
@@ -130,6 +143,6 @@ Do not reference external distribution systems in App Store documentation.
 - [ ] `nix build .#apt-rootfs-ios` merged into Wawona IPA rootfs
 - [ ] `apt search foot` works on device/simulator shell
 - [ ] `apt install foot` completes with module manager connected
-- [ ] `apt edit-sources` returns exit 1
+- [ ] `apt edit-sources` returns exit 1; `apt remove waypipe` returns exit 4 (bundled)
 - [ ] ODR tags match catalog in CI
 - [ ] StoreKit product ids match catalog in CI

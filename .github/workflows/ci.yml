@@ -21,6 +21,7 @@ jobs:
           python3 scripts/generate-catalog-json.py catalog/modules -o /tmp/catalog-out
           test -f /tmp/catalog-out/catalog.json
           test -f /tmp/catalog-out/modules.jsonl
+          test -f /tmp/catalog-out/bundled.json
 
   check-separation:
     name: App Store documentation firewall
