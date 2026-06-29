@@ -6,6 +6,7 @@ Wawona `apt` — App Store module compatibility layer.
 
 | Command | Description |
 |---------|-------------|
+| `apt --version` | Wawona apt identity (not a package manager version; backends summary) |
 | `apt --about` | Print compliance summary |
 | `apt help` | Usage |
 | `apt search [pattern]` | Filter embedded catalog |

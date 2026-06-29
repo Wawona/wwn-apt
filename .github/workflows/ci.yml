@@ -54,7 +54,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@main
       - run: nix build .#packages.aarch64-darwin.apt-rootfs-ios -L
-      - name: smoke test apt search
+      - name: smoke test apt search and version
         run: |
           out=$(nix build .#packages.aarch64-darwin.apt-rootfs-ios --print-out-paths | tail -n1)
           WAWONA_ROOTFS="$out" "$out/usr/bin/apt" search foot
+          WAWONA_ROOTFS="$out" "$out/usr/bin/apt" --version | grep -q "Wawona apt"

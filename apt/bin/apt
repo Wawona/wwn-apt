@@ -31,6 +31,10 @@ cmd="${1:-}"
 shift || true
 
 case "$cmd" in
+--version|-v)
+	apt_version_text
+	exit 0
+	;;
 --about|--help|help|"")
 	if [ "$cmd" = "--about" ] || [ "$cmd" = "--help" ] || [ "$cmd" = "help" ]; then
 		apt_about_text

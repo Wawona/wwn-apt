@@ -1,6 +1,5 @@
 # apt-common.sh — shared helpers for Wawona App Store module CLI
 
-APT_VERSION="1.0.0"
 APT_SHARE_REL="usr/share/wawona/apt"
 APT_MODULES_DIR="${HOME}/Library/Application Support/Wawona/modules"
 APT_INSTALLED_JSON="${APT_MODULES_DIR}/installed.json"
@@ -38,22 +37,47 @@ apt_load_catalog() {
 	export APT_JSONL APT_CATALOG_JSON APT_BUNDLED_JSON
 }
 
+apt_version_text() {
+	cat <<'EOF'
+Wawona apt (App Store module compatibility layer)
+This is not Debian APT or a general-purpose package manager.
+There is no standalone apt package version — behavior tracks the Wawona app release.
+
+App Store approach:
+  Optional modules (foot, neovim, fastfetch) are listed in an embedded catalog,
+  authorized with StoreKit, downloaded via On-Demand Resources from Apple's CDN,
+  and installed into Application Support. Required software (zsh, coreutils,
+  waypipe, and this apt command) is always bundled and cannot be installed or
+  removed through apt.
+
+Backends:
+  catalog        embedded catalog.json, modules.jsonl, bundled.json (wwn-apt)
+  authorization  StoreKit 2 / App Store Connect product IDs
+  download       On-Demand Resources (NSBundleResourceRequest)
+  host bridge    WWNModuleManager via Unix domain socket (when available)
+  execution      in-process dispatch through Wawona (wawona-pty)
+
+Run apt --about or apt help for command usage.
+EOF
+}
+
 apt_about_text() {
 	cat <<'EOF'
 Wawona apt — App Store module compatibility layer
 
-The apt command lists, installs, and removes Wawona modules that have been
-reviewed and approved for distribution through the App Store. It is not a
+The apt command lists, installs, and removes optional Wawona modules that have
+been reviewed and approved for distribution through the App Store. It is not a
 general-purpose package manager.
 
-  apt search [pattern]   List approved modules in the embedded catalog
-  apt install <module>   Install an optional module (StoreKit + ODR)
-  apt remove <module>    Remove an optional module you installed
+  apt search [pattern]     List optional modules in the embedded catalog
+  apt install <module>     Install an optional module (StoreKit + ODR)
+  apt remove <module>      Remove an optional module you installed
+  apt list [--installed]   Show catalog entries or installed modules
+  apt show <module>        Display module metadata
+  apt --version            Explain Wawona apt (not Debian APT; no package version)
 
 Required software (zsh, coreutils, waypipe, apt) is always bundled and cannot
 be installed or removed through this command.
-  apt list [--installed] Show catalog entries or installed modules
-  apt show <module>      Display module metadata
 
 Modules are acquired only through Apple-approved mechanisms (StoreKit and
 App Store-hosted On-Demand Resources). Users cannot add third-party
@@ -63,15 +87,17 @@ EOF
 
 apt_usage() {
 	cat <<'EOF'
-Usage: apt [--about] <command> [arguments]
+Usage: apt [--version | --about] <command> [arguments]
 
 Commands:
-  search [pattern]     Search the approved module catalog
-  install <module>       Install an approved module (StoreKit + ODR)
-  remove <module>        Remove a locally installed module
-  list [--installed]     List catalog or installed modules
-  show <module>          Show module details
-  help                   Show this help
+  search [pattern]       Search the optional module catalog
+  install <module>         Install an optional module (StoreKit + ODR)
+  remove <module>          Remove a locally installed optional module
+  list [--installed]       List catalog or installed modules
+  show <module>            Show module details
+  help                     Show this help
+  --version                Wawona apt identity (not a package manager version)
+  --about                  App Store compliance summary
 
 Unsupported (by design):
   edit-sources, add-repository, update, upgrade, dist-upgrade
