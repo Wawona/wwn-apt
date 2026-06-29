@@ -59,3 +59,9 @@ jobs:
           out=$(nix build .#packages.aarch64-darwin.apt-rootfs-ios --print-out-paths | tail -n1)
           WAWONA_ROOTFS="$out" "$out/usr/bin/apt" search foot
           WAWONA_ROOTFS="$out" "$out/usr/bin/apt" --version | grep -q "Wawona apt"
+          WAWONA_ROOTFS="$out" "$out/usr/bin/apt" list | grep -q "foot.*approved"
+          mkdir -p "$HOME/Library/Application Support/Wawona/modules"
+          printf '%s\n' '{"modules":[{"id":"foot","version":"1.19.0"}]}' \
+            > "$HOME/Library/Application Support/Wawona/modules/installed.json"
+          WAWONA_ROOTFS="$out" "$out/usr/bin/apt" list --installed | grep -q "foot.*installed"
+          WAWONA_ROOTFS="$out" "$out/usr/bin/apt" list | grep -q "foot.*installed"

@@ -71,6 +71,22 @@ Implementation steps for `installModuleWithId:`:
 6. Update `installed.json` and refresh dispatch registry.
 7. End ODR access when idle (cache may remain on device).
 
+### `installed.json` format (read by `apt list --installed`)
+
+Path: `~/Library/Application Support/Wawona/modules/installed.json`
+
+```json
+{
+  "modules": [
+    { "id": "foot", "version": "1.19.0" },
+    { "id": "neovim", "version": "0.10.0" }
+  ]
+}
+```
+
+`apt list` marks catalog rows `installed` when an id appears here; `apt list --installed`
+prints only those rows.
+
 ## IPC protocol (W2)
 
 Unix domain socket: `~/Library/Application Support/Wawona/module-manager.sock`

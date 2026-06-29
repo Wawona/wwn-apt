@@ -175,6 +175,32 @@ apt_reject_bundled_mutation() {
 	return 4
 }
 
+apt_list_format_line() {
+	line="$1"
+	status="$2"
+	id="$(apt_json_field "$line" id)"
+	ver="$(apt_json_field "$line" version)"
+	[ -n "$id" ] || return 1
+	printf '%s/%s %s\n' "$ver" "$id" "$status"
+}
+
+apt_list_catalog() {
+	installed_only="${1:-0}"
+	apt_each_module | while IFS= read -r line; do
+		id="$(apt_json_field "$line" id)"
+		[ -n "$id" ] || continue
+		if apt_module_installed "$id"; then
+			status="installed"
+		else
+			status="approved"
+		fi
+		if [ "$installed_only" -eq 1 ]; then
+			[ "$status" = "installed" ] || continue
+		fi
+		apt_list_format_line "$line" "$status"
+	done
+}
+
 apt_search_match() {
 	pattern="$1"
 	id="$2"

@@ -38,10 +38,23 @@ embedded in the app and updated with app releases.
 
 ## Output format
 
-`apt search` and `apt list` use a Debian-inspired column layout:
+`apt search`, `apt list`, and `apt list --installed` use a Debian-inspired column layout:
 
 ```
-version/id description
+version/id status
+```
+
+- `apt list` — all optional catalog modules; status is `installed` or `approved`
+- `apt list --installed` — only modules present in `installed.json`
+
+Installed state is read from:
+
+`~/Library/Application Support/Wawona/modules/installed.json`
+
+Example:
+
+```json
+{"modules":[{"id":"foot","version":"1.19.0"}]}
 ```
 
 ## Environment

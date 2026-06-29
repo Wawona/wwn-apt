@@ -120,18 +120,19 @@ remove)
 	exit 3
 	;;
 list)
-	if [ "$1" = "--installed" ]; then
-		if [ ! -f "$APT_INSTALLED_JSON" ]; then
-			exit 0
+	case "${1:-}" in
+	""|--installed)
+		if [ "${1:-}" = "--installed" ]; then
+			apt_list_catalog 1
+		else
+			apt_list_catalog 0
 		fi
-		sed -n 's/.*"id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$APT_INSTALLED_JSON"
-		exit 0
-	fi
-	apt_each_module | while IFS= read -r line; do
-		id="$(apt_json_field "$line" id)"
-		ver="$(apt_json_field "$line" version)"
-		printf '%s/%s %s\n' "$ver" "$id" "approved"
-	done
+		;;
+	*)
+		echo "apt: unknown list option '$1' (try: apt list [--installed])" >&2
+		exit 1
+		;;
+	esac
 	;;
 show)
 	[ -n "${1:-}" ] || { echo "apt: show requires a module name" >&2; exit 1; }
