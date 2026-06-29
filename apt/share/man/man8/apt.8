@@ -1,0 +1,33 @@
+.\" Wawona apt — App Store module compatibility layer
+.TH APT 8 "2026" "Wawona" "Wawona App Store modules"
+.SH NAME
+apt \- manage App Store\-approved Wawona modules
+.SH DESCRIPTION
+The \fBapt\fR command is a compatibility layer for installing and removing
+Wawona modules that have been reviewed and approved for the App Store.
+It is not a general\-purpose package manager.
+.PP
+Modules are listed in an embedded catalog. Installation uses StoreKit
+authorization and On\-Demand Resources hosted by Apple. Users cannot add
+third\-party repositories or install user\-supplied binaries.
+.SH COMMANDS
+.TP
+\fBapt search\fR [\fIpattern\fR]
+Search the approved module catalog.
+.TP
+\fBapt install\fR \fImodule\fR
+Install an approved module.
+.TP
+\fBapt remove\fR \fImodule\fR
+Remove a locally installed module.
+.TP
+\fBapt list\fR [\fB\-\-installed\fR]
+List catalog entries or installed modules.
+.TP
+\fBapt show\fR \fImodule\fR
+Display module metadata.
+.TP
+\fBapt \-\-about\fR
+Print compliance summary.
+.SH SEE ALSO
+Wawona documentation: wwn\-apt/docs/APP\-STORE\-MODULES.md

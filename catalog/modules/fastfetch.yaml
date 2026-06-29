@@ -1,0 +1,52 @@
+id: fastfetch
+name: fastfetch
+version: 2.9.0
+section: utils
+description: System information tool with Wayland-aware output.
+maintainer: Wawona Team <team@wawona.io>
+status: approved
+license: MIT
+app_store_notes: Read-only system info utility; in-process on Apple mobile.
+
+wwn_repo: wwn-fastfetch
+registry_key: fastfetch
+dispatch:
+  commands:
+    - fastfetch
+  symbol: fastfetch_main
+
+depends: []
+conflicts: []
+replaces: []
+
+platforms:
+  ios:
+    storekit:
+      product_id: io.wawona.module.fastfetch
+    odr:
+      tag: wwn-module-fastfetch
+      bundle_subpath: Modules/fastfetch
+  ipados:
+    storekit:
+      product_id: io.wawona.module.fastfetch
+    odr:
+      tag: wwn-module-fastfetch
+      bundle_subpath: Modules/fastfetch
+  tvos:
+    storekit:
+      product_id: io.wawona.module.fastfetch.tvos
+    odr:
+      tag: wwn-module-fastfetch-tvos
+      bundle_subpath: Modules/fastfetch
+  visionos:
+    storekit:
+      product_id: io.wawona.module.fastfetch.visionos
+    odr:
+      tag: wwn-module-fastfetch-visionos
+      bundle_subpath: Modules/fastfetch
+  watchos:
+    storekit:
+      product_id: io.wawona.module.fastfetch.watchos
+    odr:
+      tag: wwn-module-fastfetch-watchos
+      bundle_subpath: Modules/fastfetch

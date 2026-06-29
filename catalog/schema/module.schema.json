@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wawona.io/schemas/wwn-apt/module.schema.json",
+  "title": "Wawona App Store module manifest",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "version",
+    "section",
+    "description",
+    "maintainer",
+    "status",
+    "license",
+    "platforms",
+    "wwn_repo",
+    "registry_key",
+    "dispatch"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9+.-]*$",
+      "description": "Stable module identifier (apt package name)"
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)*([+-][0-9A-Za-z.+-]+)?$"
+    },
+    "section": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "maintainer": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "enum": ["approved", "deprecated"] },
+    "license": { "type": "string", "minLength": 1 },
+    "app_store_notes": { "type": "string" },
+    "depends": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "conflicts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "replaces": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "wwn_repo": {
+      "type": "string",
+      "pattern": "^wwn-[a-z0-9-]+$"
+    },
+    "registry_key": { "type": "string", "minLength": 1 },
+    "dispatch": {
+      "type": "object",
+      "required": ["commands", "symbol"],
+      "additionalProperties": false,
+      "properties": {
+        "commands": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "symbol": {
+          "type": "string",
+          "pattern": "^(wawona_[a-z0-9_]+_main|[a-z0-9_]+_main)$"
+        }
+      }
+    },
+    "platforms": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "ios": { "$ref": "#/$defs/applePlatform" },
+        "ipados": { "$ref": "#/$defs/applePlatform" },
+        "tvos": { "$ref": "#/$defs/applePlatform" },
+        "visionos": { "$ref": "#/$defs/applePlatform" },
+        "watchos": { "$ref": "#/$defs/applePlatform" },
+        "android": { "$ref": "#/$defs/androidPlatform" }
+      }
+    }
+  },
+  "$defs": {
+    "applePlatform": {
+      "type": "object",
+      "required": ["storekit", "odr"],
+      "additionalProperties": false,
+      "properties": {
+        "storekit": {
+          "type": "object",
+          "required": ["product_id"],
+          "additionalProperties": false,
+          "properties": {
+            "product_id": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9._-]+$"
+            }
+          }
+        },
+        "odr": {
+          "type": "object",
+          "required": ["tag", "bundle_subpath"],
+          "additionalProperties": false,
+          "properties": {
+            "tag": { "type": "string", "minLength": 1 },
+            "bundle_subpath": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "androidPlatform": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "play": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "product_id": { "type": "string" },
+            "feature_delivery": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

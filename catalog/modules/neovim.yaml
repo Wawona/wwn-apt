@@ -1,0 +1,54 @@
+id: neovim
+name: Neovim
+version: 0.10.0
+section: editors
+description: Hyperextensible Vim-based text editor (PUC Lua, in-process on Apple mobile).
+maintainer: Wawona Team <team@wawona.io>
+status: approved
+license: Apache-2.0
+app_store_notes: Text editor; nvim/vi/vim dispatch to wawona_nvim_main.
+
+wwn_repo: wwn-neovim
+registry_key: neovim
+dispatch:
+  commands:
+    - nvim
+    - vi
+    - vim
+  symbol: wawona_nvim_main
+
+depends: []
+conflicts: []
+replaces: []
+
+platforms:
+  ios:
+    storekit:
+      product_id: io.wawona.module.neovim
+    odr:
+      tag: wwn-module-neovim
+      bundle_subpath: Modules/neovim
+  ipados:
+    storekit:
+      product_id: io.wawona.module.neovim
+    odr:
+      tag: wwn-module-neovim
+      bundle_subpath: Modules/neovim
+  tvos:
+    storekit:
+      product_id: io.wawona.module.neovim.tvos
+    odr:
+      tag: wwn-module-neovim-tvos
+      bundle_subpath: Modules/neovim
+  visionos:
+    storekit:
+      product_id: io.wawona.module.neovim.visionos
+    odr:
+      tag: wwn-module-neovim-visionos
+      bundle_subpath: Modules/neovim
+  watchos:
+    storekit:
+      product_id: io.wawona.module.neovim.watchos
+    odr:
+      tag: wwn-module-neovim-watchos
+      bundle_subpath: Modules/neovim

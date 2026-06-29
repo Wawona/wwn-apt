@@ -1,0 +1,144 @@
+#!/bin/sh
+# Wawona apt — App Store module compatibility layer (shell stub)
+set -e
+
+APT_LIB=""
+case "$0" in
+*/*)
+	bindir="$(cd "$(dirname "$0")" && pwd)"
+	if [ -f "${bindir}/../lib/wawona/apt/apt-common.sh" ]; then
+		APT_LIB="${bindir}/../lib/wawona/apt/apt-common.sh"
+	fi
+	;;
+esac
+if [ -z "$APT_LIB" ]; then
+	for d in "${WAWONA_ROOTFS:-}/usr/lib/wawona/apt" "${WAWONA_BUNDLE_ROOTFS:-}/usr/lib/wawona/apt"; do
+		if [ -f "${d}/apt-common.sh" ]; then
+			APT_LIB="${d}/apt-common.sh"
+			break
+		fi
+	done
+fi
+
+if [ -z "$APT_LIB" ] || [ ! -f "$APT_LIB" ]; then
+	echo "apt: internal error: apt-common.sh not found" >&2
+	exit 1
+fi
+# shellcheck source=../lib/apt-common.sh
+. "$APT_LIB"
+
+cmd="${1:-}"
+shift || true
+
+case "$cmd" in
+--about|--help|help|"")
+	if [ "$cmd" = "--about" ] || [ "$cmd" = "--help" ] || [ "$cmd" = "help" ]; then
+		apt_about_text
+		exit 0
+	fi
+	apt_usage
+	exit 1
+	;;
+edit-sources|add-repository|add-apt-repository)
+	apt_reject_repo_commands
+	exit 1
+	;;
+update|upgrade|dist-upgrade|autoremove|autoclean)
+	echo "apt: command '$cmd' is not used for App Store modules." >&2
+	echo "apt: the module catalog is embedded in the app and updated with app releases." >&2
+	exit 1
+	;;
+search|install|remove|list|show)
+	apt_load_catalog || exit 1
+	;;
+*)
+	echo "apt: unknown command '$cmd'" >&2
+	apt_usage
+	exit 1
+	;;
+esac
+
+case "$cmd" in
+search)
+	pattern="${1:-}"
+	found=0
+	apt_each_module | while IFS= read -r line; do
+		id="$(apt_json_field "$line" id)"
+		name="$(apt_json_field "$line" name)"
+		desc="$(apt_json_field "$line" description)"
+		ver="$(apt_json_field "$line" version)"
+		if apt_search_match "$pattern" "$id" "$name" "$desc"; then
+			printf '%s/%s %s\n' "$ver" "$id" "$desc"
+			found=1
+		fi
+	done
+	;;
+install)
+	[ -n "${1:-}" ] || { echo "apt: install requires a module name" >&2; exit 1; }
+	id="$1"
+	line="$(apt_find_module_line "$id")"
+	if [ -z "$line" ]; then
+		echo "apt: module '$id' not found in catalog" >&2
+		exit 3
+	fi
+	if apt_try_module_manager; then
+		echo "apt: install '$id' (module manager connected — not implemented in stub)" >&2
+		exit 0
+	fi
+	apt_module_manager_unavailable
+	exit 2
+	;;
+remove)
+	[ -n "${1:-}" ] || { echo "apt: remove requires a module name" >&2; exit 1; }
+	id="$1"
+	line="$(apt_find_module_line "$id")"
+	if [ -z "$line" ]; then
+		echo "apt: module '$id' not found in catalog" >&2
+		exit 3
+	fi
+	if apt_module_installed "$id"; then
+		if apt_try_module_manager; then
+			echo "apt: remove '$id' (module manager connected — not implemented in stub)" >&2
+			exit 0
+		fi
+		echo "apt: module '$id' is marked installed but module manager is unavailable." >&2
+		exit 2
+	fi
+	echo "apt: module '$id' is not installed" >&2
+	exit 3
+	;;
+list)
+	if [ "$1" = "--installed" ]; then
+		if [ ! -f "$APT_INSTALLED_JSON" ]; then
+			exit 0
+		fi
+		sed -n 's/.*"id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$APT_INSTALLED_JSON"
+		exit 0
+	fi
+	apt_each_module | while IFS= read -r line; do
+		id="$(apt_json_field "$line" id)"
+		ver="$(apt_json_field "$line" version)"
+		printf '%s/%s %s\n' "$ver" "$id" "approved"
+	done
+	;;
+show)
+	[ -n "${1:-}" ] || { echo "apt: show requires a module name" >&2; exit 1; }
+	id="$1"
+	line="$(apt_find_module_line "$id")"
+	if [ -z "$line" ]; then
+		echo "apt: module '$id' not found in catalog" >&2
+		exit 3
+	fi
+	for field in id name version section description maintainer status license wwn_repo registry_key; do
+		val="$(apt_json_field "$line" "$field")"
+		[ -n "$val" ] && printf '%-14s %s\n' "${field}:" "$val"
+	done
+	symbol="$(echo "$line" | sed -n 's/.*"symbol":"\([^"]*\)".*/\1/p' | head -n 1)"
+	[ -n "$symbol" ] && printf '%-14s %s\n' "dispatch:" "$symbol"
+	if apt_module_installed "$id"; then
+		printf '%-14s %s\n' "installed:" "yes"
+	else
+		printf '%-14s %s\n' "installed:" "no"
+	fi
+	;;
+esac

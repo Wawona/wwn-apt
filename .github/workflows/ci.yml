@@ -1,0 +1,59 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate-catalog:
+    name: validate module catalog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install pyyaml jsonschema
+      - run: python3 scripts/validate-catalog.py
+      - run: python3 .github/scripts/verify-catalog-anchors.py
+      - run: |
+          python3 scripts/generate-catalog-json.py catalog/modules -o /tmp/catalog-out
+          test -f /tmp/catalog-out/catalog.json
+          test -f /tmp/catalog-out/modules.jsonl
+
+  check-separation:
+    name: App Store documentation firewall
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python3 scripts/check-app-store-firewall.py
+
+  eval:
+    name: flake eval
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: registry fragment evaluates
+        run: nix eval .#registryFragment --apply builtins.attrNames
+      - name: catalog-json instantiates
+        run: nix eval --raw .#packages.aarch64-darwin.catalog-json.drvPath
+      - name: apt-rootfs instantiates
+        run: nix eval --raw .#packages.aarch64-darwin.apt-rootfs-ios.drvPath
+
+  build:
+    name: build apt-rootfs-ios
+    runs-on: macos-15
+    needs: eval
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - run: nix build .#packages.aarch64-darwin.apt-rootfs-ios -L
+      - name: smoke test apt search
+        run: |
+          out=$(nix build .#packages.aarch64-darwin.apt-rootfs-ios --print-out-paths | tail -n1)
+          WAWONA_ROOTFS="$out" "$out/usr/bin/apt" search foot

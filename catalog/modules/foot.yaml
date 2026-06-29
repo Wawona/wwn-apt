@@ -1,0 +1,52 @@
+id: foot
+name: foot
+version: 1.19.0
+section: shells
+description: Fast, lightweight terminal emulator for Wayland.
+maintainer: Wawona Team <team@wawona.io>
+status: approved
+license: MIT
+app_store_notes: Terminal emulator client; in-process on Apple mobile.
+
+wwn_repo: wwn-foot
+registry_key: foot
+dispatch:
+  commands:
+    - foot
+  symbol: foot_main
+
+depends: []
+conflicts: []
+replaces: []
+
+platforms:
+  ios:
+    storekit:
+      product_id: io.wawona.module.foot
+    odr:
+      tag: wwn-module-foot
+      bundle_subpath: Modules/foot
+  ipados:
+    storekit:
+      product_id: io.wawona.module.foot
+    odr:
+      tag: wwn-module-foot
+      bundle_subpath: Modules/foot
+  tvos:
+    storekit:
+      product_id: io.wawona.module.foot.tvos
+    odr:
+      tag: wwn-module-foot-tvos
+      bundle_subpath: Modules/foot
+  visionos:
+    storekit:
+      product_id: io.wawona.module.foot.visionos
+    odr:
+      tag: wwn-module-foot-visionos
+      bundle_subpath: Modules/foot
+  watchos:
+    storekit:
+      product_id: io.wawona.module.foot.watchos
+    odr:
+      tag: wwn-module-foot-watchos
+      bundle_subpath: Modules/foot
