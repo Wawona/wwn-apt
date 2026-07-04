@@ -23,7 +23,7 @@ via `apt`: **zsh**, **uutils coreutils**, **waypipe**, and the **apt** command
 itself.
 
 - `apt search` — lists optional modules from the embedded catalog
-- `apt install <name>` — StoreKit + ODR for optional modules only (foot, neovim, fastfetch)
+- `apt install <name>` — StoreKit + ODR for optional modules only (foot, neovim, fastfetch). Modules with `status: planned` (sway, niri, hyprland, cosmic, xfce, kde) are listed but refuse installation until the port ships and passes review.
 - `apt remove <name>` — removes a locally installed optional module
 - `apt list`, `apt show` — catalog metadata
 

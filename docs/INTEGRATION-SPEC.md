@@ -3,6 +3,13 @@
 This document defines how the main **Wawona** app integrates `wwn-apt`. v1 ships
 the catalog and CLI stub only; host-app wiring is a separate PR series (W1–W5).
 
+> **Status:** W2 (WWNModuleManager + IPC socket) and W3 (StoreKit 2 + ODR) are
+> implemented in `Wawona/Wawona` under `src/platform/macos/ui/Modules/`
+> (`WWNModuleManager.{h,m}`, `WWNModuleStore.swift`). The manager starts at app
+> launch on all Apple targets, serves `module-manager.sock`, and exports
+> `WAWONA_MODULE_MANAGER=1`. The `apt` CLI's install/remove now speak the IPC
+> protocol below via zsh's `zsh/net/socket`.
+
 ## Flake wiring (W1)
 
 In `Wawona/flake.nix`:

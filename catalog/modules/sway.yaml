@@ -1,0 +1,52 @@
+id: sway
+name: Sway
+version: 1.10.0
+section: compositors
+description: i3-compatible tiling Wayland compositor, nested under Wawona.
+maintainer: Wawona Team <team@wawona.io>
+status: planned
+license: MIT
+app_store_notes: Nested Wayland compositor port; in-process on Apple mobile, pending port completion and App Store review.
+
+wwn_repo: wwn-sway
+registry_key: sway
+dispatch:
+  commands:
+    - sway
+  symbol: sway_main
+
+depends: []
+conflicts: []
+replaces: []
+
+platforms:
+  ios:
+    storekit:
+      product_id: io.wawona.module.sway
+    odr:
+      tag: wwn-module-sway
+      bundle_subpath: Modules/sway
+  ipados:
+    storekit:
+      product_id: io.wawona.module.sway
+    odr:
+      tag: wwn-module-sway
+      bundle_subpath: Modules/sway
+  tvos:
+    storekit:
+      product_id: io.wawona.module.sway.tvos
+    odr:
+      tag: wwn-module-sway-tvos
+      bundle_subpath: Modules/sway
+  visionos:
+    storekit:
+      product_id: io.wawona.module.sway.visionos
+    odr:
+      tag: wwn-module-sway-visionos
+      bundle_subpath: Modules/sway
+  watchos:
+    storekit:
+      product_id: io.wawona.module.sway.watchos
+    odr:
+      tag: wwn-module-sway-watchos
+      bundle_subpath: Modules/sway

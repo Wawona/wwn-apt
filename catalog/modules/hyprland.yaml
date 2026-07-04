@@ -1,0 +1,53 @@
+id: hyprland
+name: Hyprland
+version: 0.49.0
+section: compositors
+description: Dynamic tiling Wayland compositor with animations, nested under Wawona.
+maintainer: Wawona Team <team@wawona.io>
+status: planned
+license: BSD-3-Clause
+app_store_notes: Nested Wayland compositor port; in-process on Apple mobile, pending port completion and App Store review.
+
+wwn_repo: wwn-hyprland
+registry_key: hyprland
+dispatch:
+  commands:
+    - Hyprland
+    - hyprland
+  symbol: hyprland_main
+
+depends: []
+conflicts: []
+replaces: []
+
+platforms:
+  ios:
+    storekit:
+      product_id: io.wawona.module.hyprland
+    odr:
+      tag: wwn-module-hyprland
+      bundle_subpath: Modules/hyprland
+  ipados:
+    storekit:
+      product_id: io.wawona.module.hyprland
+    odr:
+      tag: wwn-module-hyprland
+      bundle_subpath: Modules/hyprland
+  tvos:
+    storekit:
+      product_id: io.wawona.module.hyprland.tvos
+    odr:
+      tag: wwn-module-hyprland-tvos
+      bundle_subpath: Modules/hyprland
+  visionos:
+    storekit:
+      product_id: io.wawona.module.hyprland.visionos
+    odr:
+      tag: wwn-module-hyprland-visionos
+      bundle_subpath: Modules/hyprland
+  watchos:
+    storekit:
+      product_id: io.wawona.module.hyprland.watchos
+    odr:
+      tag: wwn-module-hyprland-watchos
+      bundle_subpath: Modules/hyprland

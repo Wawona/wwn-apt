@@ -12,7 +12,19 @@ except ImportError:
     print("PyYAML required", file=sys.stderr)
     sys.exit(1)
 
-OPTIONAL_MODULES = frozenset({"foot", "neovim", "fastfetch"})
+OPTIONAL_MODULES = frozenset(
+    {
+        "foot",
+        "neovim",
+        "fastfetch",
+        "sway",
+        "niri",
+        "hyprland",
+        "cosmic",
+        "xfce",
+        "kde",
+    }
+)
 BUNDLED_COMPONENTS = frozenset({"zsh", "coreutils", "waypipe", "apt"})
 
 

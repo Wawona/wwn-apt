@@ -1,0 +1,52 @@
+id: cosmic
+name: COSMIC
+version: 1.0.0
+section: compositors
+description: System76 COSMIC desktop (cosmic-comp) nested under Wawona.
+maintainer: Wawona Team <team@wawona.io>
+status: planned
+license: GPL-3.0
+app_store_notes: Nested Wayland compositor port; in-process on Apple mobile, pending port completion and App Store review.
+
+wwn_repo: wwn-cosmic
+registry_key: cosmic
+dispatch:
+  commands:
+    - cosmic-comp
+  symbol: cosmic_comp_main
+
+depends: []
+conflicts: []
+replaces: []
+
+platforms:
+  ios:
+    storekit:
+      product_id: io.wawona.module.cosmic
+    odr:
+      tag: wwn-module-cosmic
+      bundle_subpath: Modules/cosmic
+  ipados:
+    storekit:
+      product_id: io.wawona.module.cosmic
+    odr:
+      tag: wwn-module-cosmic
+      bundle_subpath: Modules/cosmic
+  tvos:
+    storekit:
+      product_id: io.wawona.module.cosmic.tvos
+    odr:
+      tag: wwn-module-cosmic-tvos
+      bundle_subpath: Modules/cosmic
+  visionos:
+    storekit:
+      product_id: io.wawona.module.cosmic.visionos
+    odr:
+      tag: wwn-module-cosmic-visionos
+      bundle_subpath: Modules/cosmic
+  watchos:
+    storekit:
+      product_id: io.wawona.module.cosmic.watchos
+    odr:
+      tag: wwn-module-cosmic-watchos
+      bundle_subpath: Modules/cosmic

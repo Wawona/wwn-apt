@@ -89,9 +89,15 @@ install)
 		echo "apt: module '$id' not found in catalog" >&2
 		exit 3
 	fi
+	status="$(apt_json_field "$line" status)"
+	if [ "$status" = "planned" ]; then
+		echo "apt: module '$id' is a planned port and is not yet available." >&2
+		echo "apt: it will appear in a future Wawona release after App Store review." >&2
+		exit 5
+	fi
 	if apt_try_module_manager; then
-		echo "apt: install '$id' (module manager connected — not implemented in stub)" >&2
-		exit 0
+		apt_module_manager_request "install" "$id"
+		exit $?
 	fi
 	apt_module_manager_unavailable
 	exit 2
@@ -110,8 +116,8 @@ remove)
 	fi
 	if apt_module_installed "$id"; then
 		if apt_try_module_manager; then
-			echo "apt: remove '$id' (module manager connected — not implemented in stub)" >&2
-			exit 0
+			apt_module_manager_request "remove" "$id"
+			exit $?
 		fi
 		echo "apt: module '$id' is marked installed but module manager is unavailable." >&2
 		exit 2

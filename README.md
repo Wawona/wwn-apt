@@ -8,7 +8,7 @@ The `apt` command provided by Wawona is not a general-purpose Debian package man
 
 For example:
 
-* `apt search` lists **optional** downloadable modules in the embedded catalog (foot, neovim, fastfetch).
+* `apt search` lists **optional** downloadable modules in the embedded catalog (foot, neovim, fastfetch today; sway, niri, hyprland, cosmic, xfce, and kde are catalogued as `planned` ports and cannot be installed until reviewed).
 * `apt install <package>` uses StoreKit APIs to request and download the corresponding approved optional module.
 * `apt remove <package>` removes an optional module from the user's local installation.
 

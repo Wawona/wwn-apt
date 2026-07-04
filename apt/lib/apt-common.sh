@@ -155,6 +155,37 @@ apt_module_manager_unavailable() {
 	echo "apt: use Wawona Settings to install approved modules, or update the app when module support is enabled." >&2
 }
 
+# Send one JSON request to the WWNModuleManager socket and report the result.
+# Uses zsh's zsh/net/socket module (zsh is required bundled software).
+apt_module_manager_request() {
+	op="$1"
+	id="$2"
+	req="{\"op\":\"${op}\",\"id\":\"${id}\"}"
+	resp="$(printf '%s\n' "$req" | zsh -c '
+		zmodload zsh/net/socket 2>/dev/null || exit 9
+		zsocket "$1" 2>/dev/null || exit 9
+		fd=$REPLY
+		cat >&$fd
+		read -r line <&$fd
+		print -r -- "$line"
+	' zsh "$APT_MODULE_SOCK" 2>/dev/null)"
+	if [ -z "$resp" ]; then
+		apt_module_manager_unavailable
+		return 2
+	fi
+	case "$resp" in
+	*'"ok":true'*)
+		echo "apt: ${op} '${id}' completed."
+		return 0
+		;;
+	*)
+		err="$(printf '%s' "$resp" | sed -n 's/.*"error":"\([^"]*\)".*/\1/p')"
+		echo "apt: ${op} '${id}' failed: ${err:-unknown error}" >&2
+		return 2
+		;;
+	esac
+}
+
 apt_is_bundled_required() {
 	id="$1"
 	# Fallback when bundled.json is not yet embedded.
@@ -192,7 +223,8 @@ apt_list_catalog() {
 		if apt_module_installed "$id"; then
 			status="installed"
 		else
-			status="approved"
+			status="$(apt_json_field "$line" status)"
+			[ -n "$status" ] || status="approved"
 		fi
 		if [ "$installed_only" -eq 1 ]; then
 			[ "$status" = "installed" ] || continue

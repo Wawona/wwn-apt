@@ -25,7 +25,21 @@ SCHEMA_PATH = ROOT / "catalog" / "schema" / "module.schema.json"
 MODULES_DIR = ROOT / "catalog" / "modules"
 BUNDLED_PATH = ROOT / "catalog" / "bundled.yaml"
 
-OPTIONAL_MODULE_IDS = frozenset({"foot", "neovim", "fastfetch"})
+OPTIONAL_MODULE_IDS = frozenset(
+    {
+        # Shipping (status: approved)
+        "foot",
+        "neovim",
+        "fastfetch",
+        # Planned compositor/desktop ports (status: planned)
+        "sway",
+        "niri",
+        "hyprland",
+        "cosmic",
+        "xfce",
+        "kde",
+    }
+)
 
 KNOWN_WWN_REPOS = frozenset(
     {
@@ -39,6 +53,13 @@ KNOWN_WWN_REPOS = frozenset(
         "wwn-coreutils",
         "wwn-toolchain",
         "wwn-apt",
+        # Planned port umbrellas (created when porting starts)
+        "wwn-sway",
+        "wwn-niri",
+        "wwn-hyprland",
+        "wwn-cosmic",
+        "wwn-xfce",
+        "wwn-kde",
     }
 )
 

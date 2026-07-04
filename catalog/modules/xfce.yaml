@@ -1,0 +1,52 @@
+id: xfce
+name: Xfce (Wayland)
+version: 4.20.0
+section: compositors
+description: Xfce desktop in Wayland mode (xfwm4/labwc session) nested under Wawona.
+maintainer: Wawona Team <team@wawona.io>
+status: planned
+license: GPL-2.0
+app_store_notes: Nested Wayland compositor port; in-process on Apple mobile, pending port completion and App Store review.
+
+wwn_repo: wwn-xfce
+registry_key: xfce
+dispatch:
+  commands:
+    - xfce4-session
+  symbol: xfce_session_main
+
+depends: []
+conflicts: []
+replaces: []
+
+platforms:
+  ios:
+    storekit:
+      product_id: io.wawona.module.xfce
+    odr:
+      tag: wwn-module-xfce
+      bundle_subpath: Modules/xfce
+  ipados:
+    storekit:
+      product_id: io.wawona.module.xfce
+    odr:
+      tag: wwn-module-xfce
+      bundle_subpath: Modules/xfce
+  tvos:
+    storekit:
+      product_id: io.wawona.module.xfce.tvos
+    odr:
+      tag: wwn-module-xfce-tvos
+      bundle_subpath: Modules/xfce
+  visionos:
+    storekit:
+      product_id: io.wawona.module.xfce.visionos
+    odr:
+      tag: wwn-module-xfce-visionos
+      bundle_subpath: Modules/xfce
+  watchos:
+    storekit:
+      product_id: io.wawona.module.xfce.watchos
+    odr:
+      tag: wwn-module-xfce-watchos
+      bundle_subpath: Modules/xfce

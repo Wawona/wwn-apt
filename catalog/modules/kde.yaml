@@ -1,0 +1,53 @@
+id: kde
+name: KDE Plasma
+version: 6.3.0
+section: compositors
+description: KDE Plasma desktop (kwin_wayland session) nested under Wawona.
+maintainer: Wawona Team <team@wawona.io>
+status: planned
+license: GPL-2.0
+app_store_notes: Nested Wayland compositor port; in-process on Apple mobile, pending port completion and App Store review.
+
+wwn_repo: wwn-kde
+registry_key: kde
+dispatch:
+  commands:
+    - kwin_wayland
+    - plasmashell
+  symbol: kwin_wayland_main
+
+depends: []
+conflicts: []
+replaces: []
+
+platforms:
+  ios:
+    storekit:
+      product_id: io.wawona.module.kde
+    odr:
+      tag: wwn-module-kde
+      bundle_subpath: Modules/kde
+  ipados:
+    storekit:
+      product_id: io.wawona.module.kde
+    odr:
+      tag: wwn-module-kde
+      bundle_subpath: Modules/kde
+  tvos:
+    storekit:
+      product_id: io.wawona.module.kde.tvos
+    odr:
+      tag: wwn-module-kde-tvos
+      bundle_subpath: Modules/kde
+  visionos:
+    storekit:
+      product_id: io.wawona.module.kde.visionos
+    odr:
+      tag: wwn-module-kde-visionos
+      bundle_subpath: Modules/kde
+  watchos:
+    storekit:
+      product_id: io.wawona.module.kde.watchos
+    odr:
+      tag: wwn-module-kde-watchos
+      bundle_subpath: Modules/kde

@@ -1,0 +1,52 @@
+id: niri
+name: niri
+version: 25.5.0
+section: compositors
+description: Scrollable-tiling Wayland compositor, nested under Wawona.
+maintainer: Wawona Team <team@wawona.io>
+status: planned
+license: GPL-3.0
+app_store_notes: Nested Wayland compositor port; in-process on Apple mobile, pending port completion and App Store review.
+
+wwn_repo: wwn-niri
+registry_key: niri
+dispatch:
+  commands:
+    - niri
+  symbol: niri_main
+
+depends: []
+conflicts: []
+replaces: []
+
+platforms:
+  ios:
+    storekit:
+      product_id: io.wawona.module.niri
+    odr:
+      tag: wwn-module-niri
+      bundle_subpath: Modules/niri
+  ipados:
+    storekit:
+      product_id: io.wawona.module.niri
+    odr:
+      tag: wwn-module-niri
+      bundle_subpath: Modules/niri
+  tvos:
+    storekit:
+      product_id: io.wawona.module.niri.tvos
+    odr:
+      tag: wwn-module-niri-tvos
+      bundle_subpath: Modules/niri
+  visionos:
+    storekit:
+      product_id: io.wawona.module.niri.visionos
+    odr:
+      tag: wwn-module-niri-visionos
+      bundle_subpath: Modules/niri
+  watchos:
+    storekit:
+      product_id: io.wawona.module.niri.watchos
+    odr:
+      tag: wwn-module-niri-watchos
+      bundle_subpath: Modules/niri
