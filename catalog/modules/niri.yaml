@@ -1,12 +1,19 @@
 id: niri
 name: niri
-version: 25.5.0
+version: 26.04.0
 section: compositors
-description: Scrollable-tiling Wayland compositor, nested under Wawona.
+description: Scrollable-tiling, smithay-based Wayland compositor (runs nested under Wawona).
 maintainer: Wawona Team <team@wawona.io>
-status: planned
-license: GPL-3.0
-app_store_notes: Nested Wayland compositor port; in-process on Apple mobile, pending port completion and App Store review.
+status: approved
+license: GPL-3.0-or-later
+app_store_notes: >-
+  Nested Wayland compositor client (wwn-niri). Apple mobile ships as a static
+  library entered in-process via niri_main (no fork/exec, no JIT, no dlopen of
+  downloaded code); macOS bundles bin/niri in Wawona.app Resources; Android
+  ships libniri_bin.so exec'd from nativeLibraryDir (waypipe pattern).
+  Renders offscreen + wl_shm when the host EGL lacks a Wayland winsys
+  (ANGLE/Metal on Apple, system EGL on Android). Config KDL is bundled
+  read-only; validated nested under Wawona on macOS and Android.
 
 wwn_repo: wwn-niri
 registry_key: niri
