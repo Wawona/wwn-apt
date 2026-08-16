@@ -1,5 +1,7 @@
 # wwn-apt
 
+[![CI](https://github.com/Wawona/wwn-apt/actions/workflows/ci.yml/badge.svg)](https://github.com/Wawona/wwn-apt/actions/workflows/ci.yml)
+
 Wawona does not implement an alternative app marketplace or a traditional package manager.
 
 All downloadable software modules are specifically ported to iOS and modified to comply with App Store requirements and iOS's execution model. Each module must be submitted through App Store Connect, reviewed by Apple, and approved before it can be made available to users.
